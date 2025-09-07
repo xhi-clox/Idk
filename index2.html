@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src='//libtl.com/sdk.js' data-zone='9818146' data-sdk='show_9818146'></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>AdLancer - Earn Money Watching Ads</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    /* Your CSS styles here from the corrected file... (omitted for brevity but must be included fully in actual use) */
+   :root {
+  /* Modern Color Palette */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fc;
+  --bg-tertiary: #edf2f7;
+  --bg-card: #ffffff;
+  --accent-primary: #7e57c2;
+  --accent-secondary: #5e35b1;
+  --text-primary: #2d3748;
+  --text-secondary: #718096;
+  --text-tertiary: #a0aec0;
+  --success: #38a169;
+  --warning: #d69e2e;
+  --error: #e53e3e;
+  --border-radius: 16px;
+  --border-radius-sm: 12px;
+  --border-radius-lg: 20px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --sidebar-width: 280px;
+  --header-height: 60px;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  --bg-primary: #121826;
+  --bg-secondary: #1a202c;
+  --bg-tertiary: #2d3748;
+  --bg-card: #1e293b;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  --text-tertiary: #718096;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: var(--transition);
+  line-height: 1.5;
+}
+
+/* Navigation */
+.mobile-nav {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--bg-tertiary);
+  z-index: 1000;
+  padding: 8px 0;
+  box-shadow: var(--shadow);
+}
+
+.nav-item {
+  flex: 1;
+  text-align: center;
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: var(--border-radius-sm);
+  margin: 0 4px;
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+}
+
+.nav-item:hover:not(.active) {
+  background: var(--bg-secondary);
+}
+
+.nav-item i {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.nav-item span {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Main Content */
+.container {
+  padding: 20px 16px 80px;
+  max-width: 428px;
+  margin: 0 auto;
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+.page {
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.user-details h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.user-details p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-secondary);
+}
+
+.icon-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--bg-tertiary);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Balance Card */
+.balance-card {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.balance-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: rotate(45deg);
+}
+
+.balance-amount {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.balance-label {
+  font-size: 1rem;
+  opacity: 0.9;
+  position: relative;
+  z-index: 2;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  padding: 16px;
+  border-radius: var(--border-radius-sm);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--bg-tertiary);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Buttons */
+.btn {
+  padding: 14px 20px;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(126, 87, 194, 0.3);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--bg-tertiary);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-tertiary);
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn-disabled {
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--bg-tertiary);
+  border-radius: var(--border-radius-sm);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(126, 87, 194, 0.1);
+}
+
+/* Lists */
+.list {
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--bg-tertiary);
+}
+
+.list-item {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: var(--transition);
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item:hover {
+  background: var(--bg-secondary);
+}
+
+.list-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.list-item-content {
+  flex: 1;
+}
+
+.list-item-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.list-item-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.list-item-action {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 12px 20px;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--bg-tertiary);
+  z-index: 10000;
+  display: none;
+  max-width: 90%;
+  text-align: center;
+}
+
+.toast.show {
+  display: block;
+  animation: toastSlideIn 0.3s ease-out;
+}
+
+.toast.success {
+  background: var(--success);
+  color: white;
+  border-color: var(--success);
+}
+
+.toast.error {
+  background: var(--error);
+  color: white;
+  border-color: var(--error);
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Referral Code */
+.referral-code {
+  background: var(--bg-secondary);
+  padding: 12px 16px;
+  border-radius: var(--border-radius-sm);
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 12px 0;
+  border: 2px dashed var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+/* Loading */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--bg-tertiary);
+  border-top: 2px solid var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Hide elements initially */
+.hidden {
+  display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .container {
+    padding: 16px 12px 80px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background-color: var(--bg-card);
+  margin: 10% auto;
+  padding: 24px;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 400px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--bg-tertiary);
+  position: relative;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.close {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.close:hover {
+  color: var(--text-primary);
+}
+
+.modal h2 {
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+    
+  </style>
+</head>
+<body>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Main Container -->
+  <div class="container">
+    
+    <!-- Dashboard Page -->
+    <div id="dashboard-page" class="page active">
+      <div class="header">
+        <div class="user-info">
+          <div class="avatar" id="user-avatar">U</div>
+          <div class="user-details">
+            <h3 id="user-name">Loading...</h3>
+            <p id="user-id">User ID: Loading...</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" id="theme-toggle" title="Toggle Theme">
+            <i class="fas fa-moon"></i>
+          </button>
+          <button class="icon-btn" id="refresh-btn" title="Refresh">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Balance Card -->
+      <div class="card balance-card">
+        <div class="balance-amount" id="user-balance">0</div>
+        <div class="balance-label">Total Points</div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="ads-watched">0</div>
+          <div class="stat-label">Ads Watched</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="referrals-count">0</div>
+          <div class="stat-label">Referrals</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Quick Actions</h3>
+        <button class="btn btn-primary" id="watch-ad-btn">
+          <i class="fas fa-play"></i>
+          Watch Ad & Earn Points
+        </button>
+        <button class="btn btn-secondary" id="claim-bonus-btn">
+          <i class="fas fa-gift"></i>
+          Claim Daily Bonus
+        </button>
+      </div>
+
+      <!-- Daily Progress -->
+      <div class="card">
+        <h3 style="margin-bottom: 12px;">Daily Progress</h3>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span id="daily-progress-text">0 / 50 ads watched</span>
+          <span id="daily-progress-percent">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="daily-progress-bar" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Earn Page -->
+    <div id="earn-page" class="page">
+      <div class="header">
+        <h2>Earn Points</h2>
+      </div>
+
+      <!-- Watch Ads Section -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Watch Ads</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">
+          Watch advertisements and earn <span id="points-per-ad" style="color: var(--accent-primary); font-weight: 600;">5</span> points per ad
+        </p>
+        <button class="btn btn-primary" id="watch-ad-main-btn">
+          <i class="fas fa-play"></i>
+          Watch Advertisement
+        </button>
+        <div style="text-align: center; margin-top: 12px; font-size: 0.9rem; color: var(--text-secondary);">
+          <span id="ads-remaining">Calculating...</span>
+        </div>
+      </div>
+
+      <!-- Bonus Tasks Section -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Bonus Tasks</h3>
+        <div id="bonus-tasks-list">
+          <!-- Bonus tasks will be populated here -->
+        </div>
+      </div>
+
+      <!-- Referral Section -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Invite Friends</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">
+          Earn <span style="color: var(--success); font-weight: 600;">10 points</span> for each friend you refer!
+        </p>
+        <div class="referral-code" id="referral-code">Loading...</div>
+        <button class="btn btn-secondary" id="share-referral-btn">
+          <i class="fas fa-share"></i>
+          Share Referral Code
+        </button>
+      </div>
+    </div>
+
+    <!-- Leaderboard Page -->
+    <div id="leaderboard-page" class="page">
+      <div class="header">
+        <h2>Leaderboard</h2>
+        <button class="icon-btn" id="refresh-leaderboard" title="Refresh">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </div>
+
+      <!-- User Rank Card -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Your Rank</h3>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div class="list-item-icon" style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white;">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div>
+            <div class="list-item-title">Rank #<span id="user-rank">-</span></div>
+            <div class="list-item-subtitle"><span id="user-rank-points">0</span> points</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Users List -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Top Users</h3>
+        <div id="leaderboard-list" class="list">
+          <div class="loading">
+            <div class="spinner"></div>
+            Loading leaderboard...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Withdraw Page -->
+    <div id="withdraw-page" class="page">
+      <div class="header">
+        <h2>Withdraw</h2>
+      </div>
+
+      <!-- Balance Info -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Available Balance</h3>
+        <div class="balance-amount" style="color: var(--accent-primary); font-size: 2rem;" id="withdraw-balance">0</div>
+        <p style="color: var(--text-secondary); margin-top: 8px;">
+          Minimum withdrawal: <span id="min-withdraw-amount" style="font-weight: 600;">400</span> points
+        </p>
+      </div>
+
+      <!-- Withdrawal Form -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Request Withdrawal</h3>
+        <form id="withdrawal-form">
+          <div class="form-group">
+            <label class="form-label">Withdrawal Method</label>
+            <select class="form-input" id="withdrawal-method" required>
+              <option value="">Select method</option>
+              <option value="paypal">PayPal</option>
+              <option value="bank">Bank Transfer</option>
+              <option value="crypto">Cryptocurrency</option>
+              <option value="mobile">Mobile Money</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Account Details</label>
+            <input type="text" class="form-input" id="withdrawal-account" placeholder="Enter account details" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Amount (Points)</label>
+            <input type="number" class="form-input" id="withdrawal-amount" placeholder="Enter amount" min="400" required>
+          </div>
+          <button type="submit" class="btn btn-primary" id="submit-withdrawal-btn">
+            <i class="fas fa-paper-plane"></i>
+            Submit Request
+          </button>
+        </form>
+      </div>
+
+      <!-- Recent Withdrawals -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Recent Withdrawals</h3>
+        <div id="recent-withdrawals" class="list">
+          <div class="loading">
+            <div class="spinner"></div>
+            Loading withdrawals...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Page -->
+    <div id="profile-page" class="page">
+      <div class="header">
+        <h2>Profile</h2>
+      </div>
+
+      <!-- Profile Info -->
+      <div class="card">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 16px;" id="profile-avatar">U</div>
+          <h3 id="profile-name">Loading...</h3>
+          <p style="color: var(--text-secondary); margin-top: 4px;" id="profile-joined">Member since: Loading...</p>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="profile-balance">0</div>
+            <div class="stat-label">Total Points</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="profile-ads">0</div>
+            <div class="stat-label">Ads Watched</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="profile-referrals">0</div>
+            <div class="stat-label">Referrals</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="profile-rank">-</div>
+            <div class="stat-label">Rank</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Settings</h3>
+        <div class="list">
+          <div class="list-item" id="theme-setting">
+            <div class="list-item-icon" style="background: var(--bg-secondary); color: var(--text-primary);">
+              <i class="fas fa-palette"></i>
+            </div>
+            <div class="list-item-content">
+              <div class="list-item-title">Dark Mode</div>
+              <div class="list-item-subtitle">Toggle dark/light theme</div>
+            </div>
+            <div class="list-item-action">
+              <label class="switch">
+                <input type="checkbox" id="dark-mode-toggle">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Support Links -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px;">Support & Info</h3>
+        <div class="list">
+          <div class="list-item" id="support-link">
+            <div class="list-item-icon" style="background: var(--success); color: white;">
+              <i class="fas fa-headset"></i>
+            </div>
+            <div class="list-item-content">
+              <div class="list-item-title">Support Group</div>
+              <div class="list-item-subtitle">Get help and support</div>
+            </div>
+            <div class="list-item-action">
+              <i class="fas fa-external-link-alt"></i>
+            </div>
+          </div>
+          <div class="list-item" id="developer-link">
+            <div class="list-item-icon" style="background: var(--accent-primary); color: white;">
+              <i class="fas fa-code"></i>
+            </div>
+            <div class="list-item-content">
+              <div class="list-item-title">Developer</div>
+              <div class="list-item-subtitle">Contact the developer</div>
+            </div>
+            <div class="list-item-action">
+              <i class="fas fa-external-link-alt"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="mobile-nav">
+    <div class="nav-item active" data-page="dashboard">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </div>
+    <div class="nav-item" data-page="earn">
+      <i class="fas fa-play"></i>
+      <span>Earn</span>
+    </div>
+    <div class="nav-item" data-page="leaderboard">
+      <i class="fas fa-trophy"></i>
+      <span>Ranks</span>
+    </div>
+    <div class="nav-item" data-page="withdraw">
+      <i class="fas fa-money-bill-wave"></i>
+      <span>Withdraw</span>
+    </div>
+    <div class="nav-item" data-page="profile">
+      <i class="fas fa-user"></i>
+      <span>Profile</span>
+    </div>
+  </nav>
+
+  <!-- Ad Display Modal -->
+  <div id="ad-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="close-ad-modal">&times;</span>
+      <h2>Watch Advertisement</h2>
+      <div id="ad-container" style="text-align: center; padding: 20px;">
+        <p style="margin-bottom: 20px;">Advertisement will start in <span id="ad-countdown">3</span> seconds...</p>
+        <div id="ad-content">
+          <!-- Ad content will be inserted here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Firebase Configuration - Replace with your actual Firebase config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Configuration - Load from Firestore or use defaults
+    const APP_NAME = "AdLancer";
+    const defaultSettings = {
+      pointsPerAd: 5,
+      dailyAdLimit: 50,
+      minWithdrawalPoints: 400,
+      referrerBonus: 10,
+      refereeBonus: 5
+    };
+    
+    // Make these variables dynamic so they can be updated from Firestore
+    let settings = defaultSettings;
+    let ADS_PER_DAY_LIMIT = settings.dailyAdLimit || 50;
+    let POINTS_PER_AD = settings.pointsPerAd || 5;
+    let MIN_WITHDRAW_POINTS = settings.minWithdrawalPoints || 400;
+    let REFERRAL_BONUS_REFERRER = settings.referrerBonus || 10;
+    let REFERRAL_BONUS_REFEREE = settings.refereeBonus || 5;
+    
+    const MONETAG_AD_FUNCTION_NAME = 'show_9818146';
+    const TELEGRAM_BOT_TOKEN = "7525170440:AAFF9DO5-OEAdwlo5nrLcM0XFc16Juuh-qw";
+    const TELEGRAM_CHAT_ID = "8314434724";
+    const DEVELOPER_TELEGRAM_PROFILE_LINK = "";
+    const DEVELOPER_WEBSITE_LINK = "";
+    const OFFICIAL_CHANNEL_LINK = "";
+    const SUPPORT_GROUP_LINK = "";
+    const REFERRAL_BOT_LINK = "https://monetag.com/?ref_id=zVQj";
+    
+    const BONUS_CHANNELS = [
+      { id: 'tg_official_channel', name: 'Official Channel', link: OFFICIAL_CHANNEL_LINK, reward: 5, icon: 'fab fa-telegram-plane' },
+      { id: 'tg_support_group', name: 'Support Group', link: SUPPORT_GROUP_LINK, reward: 5, icon: 'fas fa-headset' },
+      { id: 'tg_community', name: 'Telegram Community', link: "", reward: 5, icon: 'fab fa-telegram' },
+      { id: 'wa_community', name: 'Youtube Community', link: "", reward: 10, icon: 'fab fa-youtube' }
+    ];
+
+    // DOM Elements
+    const elements = {
+      // Navigation
+      navItems: document.querySelectorAll('.nav-item'),
+      pages: document.querySelectorAll('.page'),
+      
+      // User Info
+      userAvatar: document.getElementById('user-avatar'),
+      userName: document.getElementById('user-name'),
+      userId: document.getElementById('user-id'),
+      userBalance: document.getElementById('user-balance'),
+      
+      // Stats
+      adsWatched: document.getElementById('ads-watched'),
+      referralsCount: document.getElementById('referrals-count'),
+      
+      // Buttons
+      watchAdBtn: document.getElementById('watch-ad-btn'),
+      watchAdMainBtn: document.getElementById('watch-ad-main-btn'),
+      claimBonusBtn: document.getElementById('claim-bonus-btn'),
+      refreshBtn: document.getElementById('refresh-btn'),
+      themeToggle: document.getElementById('theme-toggle'),
+      shareReferralBtn: document.getElementById('share-referral-btn'),
+      
+      // Progress
+      dailyProgressText: document.getElementById('daily-progress-text'),
+      dailyProgressPercent: document.getElementById('daily-progress-percent'),
+      dailyProgressBar: document.getElementById('daily-progress-bar'),
+      
+      // Referral
+      referralCode: document.getElementById('referral-code'),
+      
+      // Settings display
+      pointsPerAdDisplay: document.getElementById('points-per-ad'),
+      adsRemainingDisplay: document.getElementById('ads-remaining'),
+      minWithdrawDisplay: document.getElementById('min-withdraw-amount'),
+      
+      // Profile
+      profileAvatar: document.getElementById('profile-avatar'),
+      profileName: document.getElementById('profile-name'),
+      profileJoined: document.getElementById('profile-joined'),
+      profileBalance: document.getElementById('profile-balance'),
+      profileAds: document.getElementById('profile-ads'),
+      profileReferrals: document.getElementById('profile-referrals'),
+      profileRank: document.getElementById('profile-rank'),
+      
+      // Leaderboard
+      userRank: document.getElementById('user-rank'),
+      userRankPoints: document.getElementById('user-rank-points'),
+      leaderboardList: document.getElementById('leaderboard-list'),
+      refreshLeaderboard: document.getElementById('refresh-leaderboard'),
+      
+      // Withdraw
+      withdrawBalance: document.getElementById('withdraw-balance'),
+      withdrawalForm: document.getElementById('withdrawal-form'),
+      withdrawalMethod: document.getElementById('withdrawal-method'),
+      withdrawalAccount: document.getElementById('withdrawal-account'),
+      withdrawalAmount: document.getElementById('withdrawal-amount'),
+      submitWithdrawalBtn: document.getElementById('submit-withdrawal-btn'),
+      recentWithdrawals: document.getElementById('recent-withdrawals'),
+      
+      // Bonus Tasks
+      bonusTasksList: document.getElementById('bonus-tasks-list'),
+      
+      // Modals
+      adModal: document.getElementById('ad-modal'),
+      closeAdModal: document.getElementById('close-ad-modal'),
+      adCountdown: document.getElementById('ad-countdown'),
+      adContent: document.getElementById('ad-content'),
+      
+      // Toast
+      toast: document.getElementById('toast')
+    };
+
+    // Current user data - Updated to match admin panel structure
+    let currentUser = {
+      id: null,
+      firstName: 'User',
+      lastName: '',
+      points: 0,
+      totalAdsWatchedLifetime: 0,
+      referrals: [],
+      referralCode: '',
+      joinDate: new Date(),
+      lastActive: null,
+      adsWatchedToday: 0,
+      status: 'active',
+      rank: null,
+      withdrawals: []
+    };
+
+    // Initialize the app
+    async function initializeApp() {
+      try {
+        // Load settings from Firestore
+        await loadSettings();
+        
+        // Generate or load user
+        await initializeUser();
+        
+        // Load all data
+        await loadUserState();
+        
+        // Update UI
+        updateUI();
+        
+        // Initialize event listeners
+        initializeEventListeners();
+        
+        // Initialize Telegram WebApp if available
+        initializeTelegramWebApp();
+        
+        showToast('Welcome to ' + APP_NAME + '!', 'success');
+        
+      } catch (error) {
+        console.error('Error initializing app:', error);
+        showToast('Error initializing app. Please refresh.', 'error');
+      }
+    }
+
+    // Load settings from Firestore - Updated to match admin panel
+    async function loadSettings() {
+      try {
+        const settingsDoc = await db.collection('settings').doc('appSettings').get();
+        if (settingsDoc.exists) {
+          const firestoreSettings = settingsDoc.data();
+          settings = { ...defaultSettings, ...firestoreSettings };
+          
+          // Update global variables
+          ADS_PER_DAY_LIMIT = settings.dailyAdLimit || 50;
+          POINTS_PER_AD = settings.pointsPerAd || 5;
+          MIN_WITHDRAW_POINTS = settings.minWithdrawalPoints || 400;
+          REFERRAL_BONUS_REFERRER = settings.referrerBonus || 10;
+          REFERRAL_BONUS_REFEREE = settings.refereeBonus || 5;
+          
+          // Update UI elements
+          if (elements.pointsPerAdDisplay) elements.pointsPerAdDisplay.textContent = POINTS_PER_AD;
+          if (elements.minWithdrawDisplay) elements.minWithdrawDisplay.textContent = MIN_WITHDRAW_POINTS;
+        }
+      } catch (error) {
+        console.error('Error loading settings:', error);
+      }
+    }
+
+    // Initialize user (create if doesn't exist) - Updated to match admin panel structure
+    async function initializeUser() {
+      try {
+        let userId = generateDeviceId();
+        
+        // Check if user exists in Firestore
+        const userDoc = await db.collection('users').doc(userId).get();
+        
+        if (!userDoc.exists) {
+          // Create new user with structure that matches admin panel
+          const newUser = {
+            id: userId,
+            firstName: generateUsername(),
+            lastName: '',
+            points: 0,
+            totalAdsWatchedLifetime: 0,
+            referrals: [],
+            referralCode: generateReferralCode(),
+            joinDate: firebase.firestore.FieldValue.serverTimestamp(),
+            lastActive: null,
+            adsWatchedToday: 0,
+            status: 'active',
+            rank: null
+          };
+          
+          await db.collection('users').doc(userId).set(newUser);
+          currentUser = { ...newUser, joinDate: new Date() };
+        } else {
+          // Load existing user - handle both old and new structures
+          const userData = userDoc.data();
+          
+          // Migration from old structure to new structure
+          if (userData.balance !== undefined) {
+            // This is an old user, migrate to new structure
+            currentUser = {
+              id: userId,
+              firstName: userData.name || generateUsername(),
+              lastName: '',
+              points: userData.balance || 0,
+              totalAdsWatchedLifetime: userData.adsWatched || 0,
+              referrals: userData.referrals || [],
+              referralCode: userData.referralCode || generateReferralCode(),
+              joinDate: userData.joinedDate ? userData.joinedDate.toDate() : new Date(),
+              lastActive: userData.lastAdDate ? userData.lastAdDate.toDate() : null,
+              adsWatchedToday: userData.adsWatchedToday || 0,
+              status: 'active',
+              rank: userData.rank || null
+            };
+            
+            // Update user in Firestore with new structure
+            await updateUserInFirestore(currentUser);
+            
+            // Remove old fields
+            await db.collection('users').doc(userId).update({
+              balance: firebase.firestore.FieldValue.delete(),
+              adsWatched: firebase.firestore.FieldValue.delete(),
+              joinedDate: firebase.firestore.FieldValue.delete(),
+              lastAdDate: firebase.firestore.FieldValue.delete(),
+              name: firebase.firestore.FieldValue.delete()
+            });
+          } else {
+            // This is already a new structure user
+            currentUser = { ...userData, id: userId };
+            if (currentUser.joinDate && currentUser.joinDate.toDate) {
+              currentUser.joinDate = currentUser.joinDate.toDate();
+            }
+            if (currentUser.lastActive && currentUser.lastActive.toDate) {
+              currentUser.lastActive = currentUser.lastActive.toDate();
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error initializing user:', error);
+        throw error;
+      }
+    }
+
+    // Load user state and related data
+    async function loadUserState() {
+      try {
+        // Reset daily ads if new day
+        resetDailyAdsIfNewDay();
+        
+        // Load leaderboard to get user rank
+        await updateUserRank();
+        
+        // Load recent withdrawals
+        await loadRecentWithdrawals();
+        
+      } catch (error) {
+        console.error('Error loading user state:', error);
+      }
+    }
+
+    // Update all UI elements - Updated to use new field names
+    function updateUI() {
+      // User info
+      if (elements.userName) elements.userName.textContent = currentUser.firstName || 'User';
+      if (elements.userId) elements.userId.textContent = `ID: ${currentUser.id || 'Loading...'}`;
+      if (elements.userBalance) elements.userBalance.textContent = currentUser.points || 0;
+      
+      // Avatar
+      const avatarText = (currentUser.firstName || 'U').charAt(0).toUpperCase();
+      if (elements.userAvatar) elements.userAvatar.textContent = avatarText;
+      if (elements.profileAvatar) elements.profileAvatar.textContent = avatarText;
+      
+      // Stats
+      if (elements.adsWatched) elements.adsWatched.textContent = currentUser.totalAdsWatchedLifetime || 0;
+      if (elements.referralsCount) elements.referralsCount.textContent = currentUser.referrals.length || 0;
+      
+      // Profile page
+      if (elements.profileName) elements.profileName.textContent = currentUser.firstName || 'User';
+      if (elements.profileBalance) elements.profileBalance.textContent = currentUser.points || 0;
+      if (elements.profileAds) elements.profileAds.textContent = currentUser.totalAdsWatchedLifetime || 0;
+      if (elements.profileReferrals) elements.profileReferrals.textContent = currentUser.referrals.length || 0;
+      if (elements.profileRank) elements.profileRank.textContent = currentUser.rank || '-';
+      
+      if (elements.profileJoined && currentUser.joinDate) {
+        elements.profileJoined.textContent = `Member since: ${currentUser.joinDate.toLocaleDateString()}`;
+      }
+      
+      // Referral code
+      if (elements.referralCode) elements.referralCode.textContent = currentUser.referralCode || 'Loading...';
+      
+      // Daily progress
+      updateDailyProgress();
+      
+      // Withdraw page
+      if (elements.withdrawBalance) elements.withdrawBalance.textContent = currentUser.points || 0;
+      
+      // Leaderboard
+      if (elements.userRank) elements.userRank.textContent = currentUser.rank || '-';
+      if (elements.userRankPoints) elements.userRankPoints.textContent = currentUser.points || 0;
+      
+      // Settings
+      updateAdsRemaining();
+      
+      // Bonus tasks
+      renderBonusTasks();
+    }
+
+    // Update daily progress
+    function updateDailyProgress() {
+      const adsToday = currentUser.adsWatchedToday || 0;
+      const percentage = Math.min((adsToday / ADS_PER_DAY_LIMIT) * 100, 100);
+      
+      if (elements.dailyProgressText) {
+        elements.dailyProgressText.textContent = `${adsToday} / ${ADS_PER_DAY_LIMIT} ads watched`;
+      }
+      if (elements.dailyProgressPercent) {
+        elements.dailyProgressPercent.textContent = `${Math.round(percentage)}%`;
+      }
+      if (elements.dailyProgressBar) {
+        elements.dailyProgressBar.style.width = `${percentage}%`;
+      }
+    }
+
+    // Update ads remaining display
+    function updateAdsRemaining() {
+      const adsRemaining = Math.max(0, ADS_PER_DAY_LIMIT - (currentUser.adsWatchedToday || 0));
+      if (elements.adsRemainingDisplay) {
+        elements.adsRemainingDisplay.textContent = `${adsRemaining} ads remaining today`;
+      }
+      
+      // Update button states
+      const canWatchAds = adsRemaining > 0;
+      if (elements.watchAdBtn) {
+        elements.watchAdBtn.disabled = !canWatchAds;
+        elements.watchAdBtn.className = canWatchAds ? 'btn btn-primary' : 'btn btn-disabled';
+      }
+      if (elements.watchAdMainBtn) {
+        elements.watchAdMainBtn.disabled = !canWatchAds;
+        elements.watchAdMainBtn.className = canWatchAds ? 'btn btn-primary' : 'btn btn-disabled';
+      }
+    }
+
+    // Render bonus tasks
+    function renderBonusTasks() {
+      if (!elements.bonusTasksList) return;
+      
+      elements.bonusTasksList.innerHTML = '';
+      
+      BONUS_CHANNELS.forEach(channel => {
+        if (!channel.link) return;
+        
+        const taskItem = document.createElement('div');
+        taskItem.className = 'list-item';
+        taskItem.innerHTML = `
+          <div class="list-item-icon" style="background: var(--success); color: white;">
+            <i class="${channel.icon}"></i>
+          </div>
+          <div class="list-item-content">
+            <div class="list-item-title">${channel.name}</div>
+            <div class="list-item-subtitle">Earn ${channel.reward} points</div>
+          </div>
+          <div class="list-item-action">
+            <button class="btn btn-secondary" onclick="openBonusTask('${channel.id}', '${channel.link}', ${channel.reward})">
+              <i class="fas fa-external-link-alt"></i>
+              Join
+            </button>
+          </div>
+        `;
+        
+        elements.bonusTasksList.appendChild(taskItem);
+      });
+    }
+
+    // Reset daily ads if new day
+    function resetDailyAdsIfNewDay() {
+      if (!currentUser.lastActive) return;
+      
+      const lastActiveDate = new Date(currentUser.lastActive);
+      const today = new Date();
+      
+      if (lastActiveDate.toDateString() !== today.toDateString()) {
+        currentUser.adsWatchedToday = 0;
+        updateUserInFirestore({ adsWatchedToday: 0 });
+      }
+    }
+
+    // Update user rank from leaderboard
+    async function updateUserRank() {
+      try {
+        const usersSnapshot = await db.collection('users')
+          .orderBy('points', 'desc')
+          .get();
+        
+        let rank = 1;
+        usersSnapshot.forEach(doc => {
+          if (doc.id === currentUser.id) {
+            currentUser.rank = rank;
+            return;
+          }
+          rank++;
+        });
+        
+        if (currentUser.rank) {
+          await updateUserInFirestore({ rank: currentUser.rank });
+        }
+        
+      } catch (error) {
+        console.error('Error updating user rank:', error);
+      }
+    }
+
+    // Load leaderboard - Updated to use new field names
+    async function loadLeaderboard() {
+      try {
+        if (!elements.leaderboardList) return;
+        
+        elements.leaderboardList.innerHTML = '<div class="loading"><div class="spinner"></div>Loading leaderboard...</div>';
+        
+        const usersSnapshot = await db.collection('users')
+          .orderBy('points', 'desc')
+          .limit(50)
+          .get();
+        
+        elements.leaderboardList.innerHTML = '';
+        
+        let rank = 1;
+        usersSnapshot.forEach(doc => {
+          const user = doc.data();
+          const isCurrentUser = doc.id === currentUser.id;
+          
+          const listItem = document.createElement('div');
+          listItem.className = `list-item ${isCurrentUser ? 'current-user' : ''}`;
+          
+          let rankIcon = '';
+          if (rank === 1) rankIcon = '🥇';
+          else if (rank === 2) rankIcon = '🥈';
+          else if (rank === 3) rankIcon = '🥉';
+          else rankIcon = `#${rank}`;
+          
+          listItem.innerHTML = `
+            <div class="list-item-icon" style="background: ${isCurrentUser ? 'var(--accent-primary)' : 'var(--bg-secondary)'}; color: ${isCurrentUser ? 'white' : 'var(--text-primary)'};">
+              ${rankIcon}
+            </div>
+            <div class="list-item-content">
+              <div class="list-item-title">${user.firstName || 'User'} ${isCurrentUser ? '(You)' : ''}</div>
+              <div class="list-item-subtitle">${user.totalAdsWatchedLifetime || 0} ads watched</div>
+            </div>
+            <div class="list-item-action">
+              ${user.points || 0} pts
+            </div>
+          `;
+          
+          elements.leaderboardList.appendChild(listItem);
+          rank++;
+        });
+        
+      } catch (error) {
+        console.error('Error loading leaderboard:', error);
+        if (elements.leaderboardList) {
+          elements.leaderboardList.innerHTML = '<div class="loading">Error loading leaderboard</div>';
+        }
+      }
+    }
+
+    // Load recent withdrawals - Updated to match admin panel structure
+    async function loadRecentWithdrawals() {
+      try {
+        if (!elements.recentWithdrawals) return;
+        
+        const withdrawalsSnapshot = await db.collection('withdrawals')
+          .where('userId', '==', currentUser.id)
+          .orderBy('requestDate', 'desc')
+          .limit(10)
+          .get();
+        
+        if (withdrawalsSnapshot.empty) {
+          elements.recentWithdrawals.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">No withdrawals yet</div>';
+          return;
+        }
+        
+        elements.recentWithdrawals.innerHTML = '';
+        
+        withdrawalsSnapshot.forEach(doc => {
+          const withdrawal = doc.data();
+          const listItem = document.createElement('div');
+          listItem.className = 'list-item';
+          
+          let statusColor = 'var(--warning)';
+          let statusIcon = 'fas fa-clock';
+          
+          if (withdrawal.status === 'approved') {
+            statusColor = 'var(--success)';
+            statusIcon = 'fas fa-check';
+          } else if (withdrawal.status === 'rejected') {
+            statusColor = 'var(--error)';
+            statusIcon = 'fas fa-times';
+          }
+          
+          const requestDate = withdrawal.requestDate ? 
+            withdrawal.requestDate.toDate().toLocaleDateString() : 
+            'Unknown date';
+          
+          listItem.innerHTML = `
+            <div class="list-item-icon" style="background: ${statusColor}; color: white;">
+              <i class="${statusIcon}"></i>
+            </div>
+            <div class="list-item-content">
+              <div class="list-item-title">${withdrawal.amount} points</div>
+              <div class="list-item-subtitle">${withdrawal.method} - ${requestDate}</div>
+            </div>
+            <div class="list-item-action" style="color: ${statusColor};">
+              ${withdrawal.status}
+            </div>
+          `;
+          
+          elements.recentWithdrawals.appendChild(listItem);
+        });
+        
+      } catch (error) {
+        console.error('Error loading withdrawals:', error);
+        if (elements.recentWithdrawals) {
+          elements.recentWithdrawals.innerHTML = '<div class="loading">Error loading withdrawals</div>';
+        }
+      }
+    }
+
+    // Update user in Firestore
+    async function updateUserInFirestore(updates) {
+      try {
+        await db.collection('users').doc(currentUser.id).update(updates);
+        
+        // Update local user object
+        Object.assign(currentUser, updates);
+        
+      } catch (error) {
+        console.error('Error updating user in Firestore:', error);
+        throw error;
+      }
+    }
+
+    // Watch ad functionality
+    async function watchAd() {
+      try {
+        // Check if user can watch more ads today
+        const adsToday = currentUser.adsWatchedToday || 0;
+        if (adsToday >= ADS_PER_DAY_LIMIT) {
+          showToast('Daily ad limit reached! Come back tomorrow.', 'error');
+          return;
+        }
+        
+        // Show ad modal
+        showAdModal();
+        
+      } catch (error) {
+        console.error('Error watching ad:', error);
+        showToast('Error loading ad. Please try again.', 'error');
+      }
+    }
+
+    // Show ad modal
+    function showAdModal() {
+      if (!elements.adModal) return;
+      
+      elements.adModal.style.display = 'block';
+      
+      // Countdown before showing ad
+      let countdown = 3;
+      elements.adCountdown.textContent = countdown;
+      
+      const countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+          elements.adCountdown.textContent = countdown;
+        } else {
+          clearInterval(countdownInterval);
+          showActualAd();
+        }
+      }, 1000);
+    }
+
+    // Show actual ad
+    function showActualAd() {
+      if (!elements.adContent) return;
+      
+      elements.adContent.innerHTML = `
+        <div style="padding: 40px; border: 2px dashed var(--accent-primary); border-radius: 12px; margin: 20px 0;">
+          <h3 style="margin-bottom: 16px;">Advertisement</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 20px;">This is a sample advertisement. In a real implementation, this would be replaced with actual ad content from your ad network.</p>
+          <button class="btn btn-success" onclick="completeAd()">
+            <i class="fas fa-check"></i>
+            Complete & Earn ${POINTS_PER_AD} Points
+          </button>
+        </div>
+      `;
+      
+      // If Monetag function exists, try to call it
+      if (typeof window[MONETAG_AD_FUNCTION_NAME] === 'function') {
+        try {
+          window[MONETAG_AD_FUNCTION_NAME]();
+        } catch (error) {
+          console.error('Error calling Monetag function:', error);
+        }
+      }
+    }
+
+    // Complete ad and award points - Updated to use new field names
+    async function completeAd() {
+      try {
+        // Award points
+        const newPoints = (currentUser.points || 0) + POINTS_PER_AD;
+        const newTotalAds = (currentUser.totalAdsWatchedLifetime || 0) + 1;
+        const newAdsWatchedToday = (currentUser.adsWatchedToday || 0) + 1;
+        
+        const updates = {
+          points: newPoints,
+          totalAdsWatchedLifetime: newTotalAds,
+          adsWatchedToday: newAdsWatchedToday,
+          lastActive: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        await updateUserInFirestore(updates);
+        
+        // Update UI
+        updateUI();
+        
+        // Close modal
+        closeAdModal();
+        
+        showToast(`Congratulations! You earned ${POINTS_PER_AD} points!`, 'success');
+        
+        // Send notification to Telegram (if configured)
+        if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+          sendTelegramNotification(`User ${currentUser.firstName} (${currentUser.id}) watched an ad and earned ${POINTS_PER_AD} points. New balance: ${newPoints}`);
+        }
+        
+      } catch (error) {
+        console.error('Error completing ad:', error);
+        showToast('Error processing ad completion. Please try again.', 'error');
+      }
+    }
+
+    // Close ad modal
+    function closeAdModal() {
+      if (elements.adModal) {
+        elements.adModal.style.display = 'none';
+      }
+      if (elements.adContent) {
+        elements.adContent.innerHTML = '';
+      }
+    }
+
+    // Handle withdrawal form submission - Updated to match admin panel structure
+    async function handleWithdrawal(event) {
+      event.preventDefault();
+      
+      try {
+        const method = elements.withdrawalMethod.value;
+        const account = elements.withdrawalAccount.value;
+        const amount = parseInt(elements.withdrawalAmount.value);
+        
+        // Validation
+        if (!method || !account || !amount) {
+          showToast('Please fill all fields', 'error');
+          return;
+        }
+        
+        if (amount < MIN_WITHDRAW_POINTS) {
+          showToast(`Minimum withdrawal is ${MIN_WITHDRAW_POINTS} points`, 'error');
+          return;
+        }
+        
+        if (amount > currentUser.points) {
+          showToast('Insufficient balance', 'error');
+          return;
+        }
+        
+        // Create withdrawal request that matches admin panel structure
+        const withdrawalData = {
+          userId: currentUser.id,
+          userName: currentUser.firstName + ' ' + currentUser.lastName,
+          method: method,
+          account: account,
+          amount: amount,
+          status: 'pending',
+          requestDate: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        await db.collection('withdrawals').add(withdrawalData);
+        
+        // Deduct points from user
+        const newPoints = currentUser.points - amount;
+        await updateUserInFirestore({ points: newPoints });
+        
+        showToast('Withdrawal request submitted successfully!', 'success');
+        
+        // Clear form
+        elements.withdrawalForm.reset();
+        
+        // Reload withdrawals
+        await loadRecentWithdrawals();
+        
+        // Send notification to Telegram
+        if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+          sendTelegramNotification(`New withdrawal request from ${currentUser.firstName} (${currentUser.id}): ${amount} points via ${method} to ${account}`);
+        }
+        
+      } catch (error) {
+        console.error('Error submitting withdrawal:', error);
+        showToast('Error submitting withdrawal request', 'error');
+      }
+    }
+
+    // Open bonus task
+    function openBonusTask(taskId, link, reward) {
+      if (!link) {
+        showToast('Link not available', 'error');
+        return;
+      }
+      
+      // Open link
+      window.open(link, '_blank');
+      
+      // Award points (in a real app, you'd verify the user actually completed the task)
+      setTimeout(async () => {
+        try {
+          const newPoints = (currentUser.points || 0) + reward;
+          await updateUserInFirestore({ points: newPoints });
+          updateUI();
+          showToast(`Bonus task completed! You earned ${reward} points!`, 'success');
+        } catch (error) {
+          console.error('Error awarding bonus:', error);
+        }
+      }, 3000); // Award after 3 seconds (simulate task completion)
+    }
+
+    // Send Telegram notification
+    async function sendTelegramNotification(message) {
+      try {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message,
+          }),
+        });
+      } catch (error) {
+        console.error('Error sending Telegram notification:', error);
+      }
+    }
+
+    // Utility functions
+    function generateDeviceId() {
+      // Try to get from Telegram WebApp first
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+        return `tg_${window.Telegram.WebApp.initDataUnsafe.user.id}`;
+      }
+      
+      // Fallback to localStorage or generate new
+      let deviceId = localStorage.getItem('adlancer_device_id');
+      if (!deviceId) {
+        deviceId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('adlancer_device_id', deviceId);
+      }
+      return deviceId;
+    }
+
+    function generateUsername() {
+      // Try to get from Telegram WebApp first
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+        return window.Telegram.WebApp.initDataUnsafe.user.first_name || 'User';
+      }
+      
+      // Generate random username
+      const adjectives = ['Happy', 'Lucky', 'Smart', 'Cool', 'Fast', 'Bright', 'Bold', 'Clever'];
+      const nouns = ['User', 'Player', 'Earner', 'Winner', 'Star', 'Pro', 'Ace', 'Hero'];
+      return adjectives[Math.floor(Math.random() * adjectives.length)] + nouns[Math.floor(Math.random() * nouns.length)] + Math.floor(Math.random() * 1000);
+    }
+
+    function generateReferralCode() {
+      return 'REF' + Date.now().toString(36).toUpperCase();
+    }
+
+    // Show toast notification
+    function showToast(message, type = 'info') {
+      if (!elements.toast) return;
+      
+      elements.toast.textContent = message;
+      elements.toast.className = `toast show ${type}`;
+      
+      setTimeout(() => {
+        elements.toast.className = 'toast';
+      }, 3000);
+    }
+
+    // Navigation
+    function showPage(pageId) {
+      // Hide all pages
+      elements.pages.forEach(page => page.classList.remove('active'));
+      
+      // Show target page
+      const targetPage = document.getElementById(pageId + '-page');
+      if (targetPage) {
+        targetPage.classList.add('active');
+      }
+      
+      // Update navigation
+      elements.navItems.forEach(nav => nav.classList.remove('active'));
+      const activeNav = document.querySelector(`[data-page="${pageId}"]`);
+      if (activeNav) {
+        activeNav.classList.add('active');
+      }
+      
+      // Load page-specific data
+      if (pageId === 'leaderboard') {
+        loadLeaderboard();
+      } else if (pageId === 'withdraw') {
+        loadRecentWithdrawals();
+      }
+    }
+
+    // Initialize event listeners
+    function initializeEventListeners() {
+      // Navigation
+      elements.navItems.forEach(navItem => {
+        navItem.addEventListener('click', () => {
+          const page = navItem.getAttribute('data-page');
+          showPage(page);
+        });
+      });
+      
+      // Watch ad buttons
+      if (elements.watchAdBtn) {
+        elements.watchAdBtn.addEventListener('click', watchAd);
+      }
+      if (elements.watchAdMainBtn) {
+        elements.watchAdMainBtn.addEventListener('click', watchAd);
+      }
+      
+      // Refresh button
+      if (elements.refreshBtn) {
+        elements.refreshBtn.addEventListener('click', async () => {
+          showToast('Refreshing data...', 'info');
+          await loadUserState();
+          updateUI();
+          showToast('Data refreshed!', 'success');
+        });
+      }
+      
+      // Refresh leaderboard
+      if (elements.refreshLeaderboard) {
+        elements.refreshLeaderboard.addEventListener('click', loadLeaderboard);
+      }
+      
+      // Theme toggle
+      if (elements.themeToggle) {
+        elements.themeToggle.addEventListener('click', toggleTheme);
+      }
+      
+      // Share referral
+      if (elements.shareReferralBtn) {
+        elements.shareReferralBtn.addEventListener('click', shareReferral);
+      }
+      
+      // Withdrawal form
+      if (elements.withdrawalForm) {
+        elements.withdrawalForm.addEventListener('submit', handleWithdrawal);
+      }
+      
+      // Close ad modal
+      if (elements.closeAdModal) {
+        elements.closeAdModal.addEventListener('click', closeAdModal);
+      }
+      
+      // Close modal when clicking outside
+      if (elements.adModal) {
+        elements.adModal.addEventListener('click', (event) => {
+          if (event.target === elements.adModal) {
+            closeAdModal();
+          }
+        });
+      }
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('adlancer_theme', isDark ? 'dark' : 'light');
+      
+      // Update theme toggle icon
+      if (elements.themeToggle) {
+        const icon = elements.themeToggle.querySelector('i');
+        icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+
+    // Share referral
+    function shareReferral() {
+      const referralText = `Join ${APP_NAME} using my referral code: ${currentUser.referralCode} and start earning money by watching ads! 💰`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: APP_NAME + ' Referral',
+          text: referralText,
+        });
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(referralText).then(() => {
+          showToast('Referral code copied to clipboard!', 'success');
+        });
+      } else {
+        // Fallback: show the text in an alert
+        prompt('Copy your referral text:', referralText);
+      }
+    }
+
+    // Initialize Telegram WebApp
+    function initializeTelegramWebApp() {
+      if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+        
+        // Expand the WebApp
+        tg.expand();
+        
+        // Set theme
+        if (tg.colorScheme === 'dark') {
+          document.body.classList.add('dark-mode');
+        }
+        
+        // Handle theme changes
+        tg.onEvent('themeChanged', function() {
+          if (tg.colorScheme === 'dark') {
+            document.body.classList.add('dark-mode');
+          } else {
+            document.body.classList.remove('dark-mode');
+          }
+        });
+        
+        // Set main button (for withdrawals, etc.)
+        tg.MainButton.text = 'Request Withdrawal';
+        tg.MainButton.show();
+        
+        tg.onEvent('mainButtonClicked', function() {
+          showPage('withdraw');
+        });
+      }
+    }
+
+    // Load theme on startup
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('adlancer_theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (elements.themeToggle) {
+          const icon = elements.themeToggle.querySelector('i');
+          icon.className = 'fas fa-sun';
+        }
+      }
+    }
+
+    // Make completeAd globally available
+    window.completeAd = completeAd;
+    window.openBonusTask = openBonusTask;
+
+    // Initialize app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      loadTheme();
+      initializeApp();
+    });
+  </script>
+</body>
+</html>
