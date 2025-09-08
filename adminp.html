@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -109,7 +110,8 @@
       transition: var(--transition);
     }
 
-    .nav-link:hover, .nav-link.active {
+    .nav-link:hover,
+    .nav-link.active {
       background: rgba(126, 87, 194, 0.1);
       color: var(--accent-primary);
     }
@@ -250,7 +252,8 @@
     .admin-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 600px; /* Ensure minimum width for proper display */
+      min-width: 600px;
+      /* Ensure minimum width for proper display */
     }
 
     .admin-table th,
@@ -258,7 +261,8 @@
       padding: 12px 15px;
       text-align: left;
       border-bottom: 1px solid var(--bg-tertiary);
-      white-space: nowrap; /* Prevent text wrapping */
+      white-space: nowrap;
+      /* Prevent text wrapping */
     }
 
     .admin-table th {
@@ -281,7 +285,7 @@
         min-width: 500px;
         font-size: 0.8rem;
       }
-      
+
       .admin-table th,
       .admin-table td {
         padding: 8px 10px;
@@ -293,7 +297,7 @@
         min-width: 400px;
         font-size: 0.75rem;
       }
-      
+
       .admin-table th,
       .admin-table td {
         padding: 6px 8px;
@@ -742,33 +746,72 @@
 
     /* Mobile Navigation Button */
     .mobile-menu-button {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      cursor: pointer;
-      z-index: 1000;
-      box-shadow: 0 4px 12px rgba(126, 87, 194, 0.4);
-      transition: all 0.3s ease;
-      border: none;
-    }
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(126, 87, 194, 0.4);
+  border: none;
+  
+  /* Optimized transitions */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Hardware acceleration */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  
+  /* Prevent button from being affected by touch */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  
+  /* Ensure all child elements are clickable */
+  pointer-events: all;
+}
 
-    .mobile-menu-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 16px rgba(126, 87, 194, 0.5);
-    }
+.mobile-menu-button * {
+  pointer-events: none; /* Let clicks pass through to parent */
+}
 
-    .mobile-menu-button.active {
-      transform: rotate(45deg);
-    }
+.mobile-menu-button:hover {
+  transform: translateZ(0) scale(1.05);
+  box-shadow: 0 6px 16px rgba(126, 87, 194, 0.5);
+}
+
+.mobile-menu-button:active {
+  transform: translateZ(0) scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+.mobile-menu-button.active {
+  transform: translateZ(0) rotate(45deg);
+}
+
+.mobile-menu-button.active:hover {
+  transform: translateZ(0) rotate(45deg) scale(1.05);
+}
+
+/* Sidebar optimization */
+.admin-sidebar {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.admin-sidebar.mobile-open {
+  transform: translateX(0) translateZ(0);
+}
 
     /* Mobile-First Responsive Design */
     @media (max-width: 1200px) {
@@ -782,19 +825,19 @@
         width: 70px;
         overflow: visible;
       }
-      
+
       .nav-link span {
         display: none;
       }
-      
+
       .admin-logo span {
         display: none;
       }
-      
+
       .admin-logo {
         justify-content: center;
       }
-      
+
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -804,7 +847,7 @@
       .admin-container {
         flex-direction: column;
       }
-      
+
       .admin-sidebar {
         position: fixed;
         left: -280px;
@@ -813,35 +856,35 @@
         z-index: 1000;
         transition: left 0.3s ease;
       }
-      
+
       .admin-sidebar.mobile-open {
         left: 0;
       }
-      
+
       .admin-nav {
         display: block;
         padding: 0 10px;
       }
-      
+
       .nav-item {
         margin-bottom: 5px;
         min-width: auto;
       }
-      
+
       .nav-link span {
         display: inline;
       }
-      
+
       .nav-link {
         padding: 12px 15px;
         font-size: 1rem;
       }
-      
+
       .admin-main {
         padding: 15px;
         width: 100%;
       }
-      
+
       .admin-header {
         padding: 12px 15px;
         margin-bottom: 15px;
@@ -849,40 +892,44 @@
         gap: 10px;
         align-items: flex-start;
       }
-      
+
       .header-actions {
         width: 100%;
         justify-content: space-between;
       }
-      
+
       .stats-grid {
         grid-template-columns: 1fr;
         gap: 15px;
         margin-bottom: 15px;
       }
-      
+
       .stat-card {
         padding: 15px;
       }
-      
+
       .content-card {
         padding: 15px;
         margin-bottom: 15px;
       }
-      
-      
+
+
       .btn {
         padding: 6px 12px;
         font-size: 0.8rem;
       }
-      
+
       .btn-sm {
         padding: 4px 8px;
         font-size: 0.75rem;
       }
-      
+
       .mobile-menu-button {
         display: flex;
+
+        .admin-sidebar:not(.mobile-open) {
+          transform: translateX(-100%) translateZ(0);
+        }
       }
     }
 
@@ -890,74 +937,74 @@
       .admin-main {
         padding: 10px;
       }
-      
+
       .admin-header {
         padding: 10px 12px;
         margin-bottom: 10px;
       }
-      
+
       .page-title {
         font-size: 1.2rem;
       }
-      
+
       .stats-grid {
         gap: 10px;
         margin-bottom: 10px;
       }
-      
+
       .stat-card {
         padding: 12px;
       }
-      
+
       .stat-value {
         font-size: 1.5rem;
       }
-      
+
       .content-card {
         padding: 12px;
         margin-bottom: 10px;
       }
-      
+
       .card-title {
         font-size: 1rem;
       }
-      
-      
+
+
       .form-control {
         padding: 8px 10px;
         font-size: 0.85rem;
       }
-      
+
       .search-input {
         padding: 8px 10px;
         font-size: 0.85rem;
       }
-      
+
       .search-btn {
         padding: 8px 10px;
       }
-      
+
       .pagination {
         flex-wrap: wrap;
         gap: 3px;
       }
-      
+
       .page-link {
         padding: 6px 8px;
         font-size: 0.75rem;
       }
-      
+
       .card-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
       }
-      
+
       .card-actions {
         width: 100%;
         justify-content: space-between;
       }
-      
+
       .search-box {
         width: 100%;
       }
@@ -970,32 +1017,33 @@
         padding: 15px;
         margin: 10px;
       }
-      
+
       .modal-title {
         font-size: 1.1rem;
       }
-      
+
       .user-stats-grid {
         grid-template-columns: 1fr;
         gap: 10px;
       }
-      
+
       .detail-row {
         flex-direction: column;
         align-items: flex-start;
         gap: 5px;
       }
-      
+
       .detail-label {
         font-size: 0.8rem;
       }
-      
+
       .detail-value {
         font-size: 0.85rem;
       }
     }
   </style>
 </head>
+
 <body class="dark-mode">
   <!-- Login Screen (initially visible) -->
   <div id="loginScreen" class="login-container">
@@ -1387,7 +1435,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Mobile Menu Button -->
     <button class="mobile-menu-button" id="mobileMenuButton" style="display: none;">
       <i class="fas fa-bars"></i>
@@ -1487,12 +1535,12 @@
     }
 
     // Login form submission
-    loginForm.addEventListener('submit', function(e) {
+    loginForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      
+
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
-      
+
       if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
         localStorage.setItem('adminLoggedIn', 'true');
         loginScreen.style.display = 'none';
@@ -1505,20 +1553,20 @@
     });
 
     // Logout functionality
-    logoutBtn.addEventListener('click', function() {
+    logoutBtn.addEventListener('click', function () {
       localStorage.removeItem('adminLoggedIn');
       // Unsubscribe from real-time listeners
       if (usersListener) usersListener();
       if (withdrawalsListener) withdrawalsListener();
       if (settingsListener) settingsListener();
-      
+
       adminPanel.style.display = 'none';
       loginScreen.style.display = 'flex';
       showToast('Logged out successfully', 'success');
     });
 
     // Theme toggle
-    themeToggleBtn.addEventListener('click', function() {
+    themeToggleBtn.addEventListener('click', function () {
       document.body.classList.toggle('light-mode');
       document.body.classList.toggle('dark-mode');
       const isDarkMode = document.body.classList.contains('dark-mode');
@@ -1527,7 +1575,7 @@
     });
 
     // Refresh data button
-    refreshDataBtn.addEventListener('click', function() {
+    refreshDataBtn.addEventListener('click', function () {
       // Unsubscribe and resubscribe to refresh data
       if (usersListener) usersListener();
       if (withdrawalsListener) withdrawalsListener();
@@ -1536,73 +1584,180 @@
     });
 
     // User modal functionality
-    closeUserModal.addEventListener('click', function() {
+    closeUserModal.addEventListener('click', function () {
       userModal.classList.remove('show');
     });
 
-    userModal.addEventListener('click', function(e) {
+    userModal.addEventListener('click', function (e) {
       if (e.target === userModal) {
         userModal.classList.remove('show');
       }
     });
 
     // Mobile menu toggle
-    mobileMenuButton.addEventListener('click', function() {
-      adminSidebar.classList.toggle('mobile-open');
-      this.classList.toggle('active');
-    });
-
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', function(e) {
-      if (window.innerWidth <= 768 && 
-          adminSidebar.classList.contains('mobile-open') && 
-          !adminSidebar.contains(e.target) && 
-          e.target !== mobileMenuButton) {
-        adminSidebar.classList.remove('mobile-open');
-        mobileMenuButton.classList.remove('active');
-      }
-    });
-
-    // Apply saved theme
-    function applySavedTheme() {
-      const savedTheme = localStorage.getItem('adminDarkMode') || 'dark';
-      document.body.classList.toggle('dark-mode', savedTheme === 'dark');
-      document.body.classList.toggle('light-mode', savedTheme === 'light');
-      themeToggleBtn.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+ function throttle(func, limit) {
+  let inThrottle;
+  return function() {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
     }
+  };
+}
 
-    // Check screen size and show/hide mobile menu button
-    function checkScreenSize() {
-      if (window.innerWidth <= 768) {
-        mobileMenuButton.style.display = 'flex';
-        adminSidebar.classList.remove('mobile-open');
-        mobileMenuButton.classList.remove('active');
-      } else {
-        mobileMenuButton.style.display = 'none';
-        adminSidebar.classList.remove('mobile-open');
-        mobileMenuButton.classList.remove('active');
-      }
+// Debounce function for resize events
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Mobile menu toggle with improved event handling
+let isToggling = false;
+
+mobileMenuButton.addEventListener('click', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  
+  // Prevent multiple rapid clicks
+  if (isToggling) return;
+  isToggling = true;
+  
+  const isCurrentlyOpen = adminSidebar.classList.contains('mobile-open');
+  
+  if (isCurrentlyOpen) {
+    adminSidebar.classList.remove('mobile-open');
+    this.classList.remove('active');
+  } else {
+    adminSidebar.classList.add('mobile-open');
+    this.classList.add('active');
+  }
+  
+  // Reset toggle flag after animation
+  setTimeout(() => {
+    isToggling = false;
+  }, 300);
+});
+
+// Optimized outside click handler
+let isClosing = false;
+
+document.addEventListener('click', function(e) {
+  if (isClosing || window.innerWidth > 768) return;
+  
+  const sidebarOpen = adminSidebar.classList.contains('mobile-open');
+  
+  if (sidebarOpen && 
+      !adminSidebar.contains(e.target) && 
+      !mobileMenuButton.contains(e.target)) {
+    
+    isClosing = true;
+    adminSidebar.classList.remove('mobile-open');
+    mobileMenuButton.classList.remove('active');
+    
+    setTimeout(() => {
+      isClosing = false;
+    }, 300);
+  }
+}, { passive: true });
+
+// Optimized theme application
+function applySavedTheme() {
+  const savedTheme = localStorage.getItem('adminDarkMode') || 'dark';
+  const isDark = savedTheme === 'dark';
+  
+  // Use requestAnimationFrame for smooth theme switching
+  requestAnimationFrame(() => {
+    document.body.classList.toggle('dark-mode', isDark);
+    document.body.classList.toggle('light-mode', !isDark);
+    
+    if (themeToggleBtn) {
+      themeToggleBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
     }
+  });
+}
 
-    // Tab navigation
-    navLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        
+// Optimized screen size check with debounced resize
+function checkScreenSize() {
+  const isMobile = window.innerWidth <= 768;
+  
+  requestAnimationFrame(() => {
+    if (isMobile) {
+      mobileMenuButton.style.display = 'flex';
+    } else {
+      mobileMenuButton.style.display = 'none';
+      adminSidebar.classList.remove('mobile-open');
+      mobileMenuButton.classList.remove('active');
+      isToggling = false;
+      isClosing = false;
+    }
+  });
+}
+
+// Use debounced resize listener
+window.addEventListener('resize', debounce(checkScreenSize, 150), { passive: true });
+
+// Add touch event handling for better mobile responsiveness
+mobileMenuButton.addEventListener('touchstart', function() {
+  this.style.transform = 'translateZ(0) scale(0.98)';
+}, { passive: true });
+
+mobileMenuButton.addEventListener('touchend', function() {
+  this.style.transform = '';
+}, { passive: true });
+
+// Enhanced toggle with body scroll management - removed duplicate handler
+// Prevent sidebar scrolling when menu is open (optional)
+function toggleBodyScroll(disable) {
+  if (window.innerWidth <= 768) {
+    document.body.style.overflow = disable ? 'hidden' : '';
+  }
+}
+
+// Close menu on escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && 
+      adminSidebar.classList.contains('mobile-open') && 
+      window.innerWidth <= 768) {
+    
+    closeMobileMenu();
+  }
+}, { passive: true });
+
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+  checkScreenSize();
+  applySavedTheme();
+});
+
+// Tab navigation
+navLinks.forEach(link => {
+  link.addEventListener('click', function (e) {
+    e.preventDefault();
+
         // Remove active class from all links and tabs
         navLinks.forEach(l => l.classList.remove('active'));
         tabContents.forEach(t => t.classList.remove('active'));
-        
+
         // Add active class to clicked link
         this.classList.add('active');
-        
+
         // Show corresponding tab
         const tabId = `${this.dataset.tab}Tab`;
         document.getElementById(tabId).classList.add('active');
-        
+
         // Update page title
         pageTitle.textContent = this.querySelector('span').textContent;
-        
+
         // On mobile, close the sidebar after selecting a tab
         if (window.innerWidth <= 768) {
           adminSidebar.classList.remove('mobile-open');
@@ -1612,14 +1767,14 @@
 
     // Withdrawal tab navigation
     withdrawalTabs.forEach(tab => {
-      tab.addEventListener('click', function() {
+      tab.addEventListener('click', function () {
         // Remove active class from all tabs
         withdrawalTabs.forEach(t => t.classList.remove('active'));
         withdrawalTabContents.forEach(t => t.classList.remove('active'));
-        
+
         // Add active class to clicked tab
         this.classList.add('active');
-        
+
         // Show corresponding content
         const tabId = `${this.dataset.withdrawalTab}WithdrawalsTab`;
         const contentElement = document.getElementById(tabId);
@@ -1637,7 +1792,7 @@
         snapshot.forEach(doc => {
           users.push({ id: doc.id, ...doc.data() });
         });
-        
+
         updateDashboardStats(users);
         updateUsersTable(users);
         populateTopUsers(users);
@@ -1653,7 +1808,7 @@
         snapshot.forEach(doc => {
           withdrawals.push({ id: doc.id, ...doc.data() });
         });
-        
+
         updateWithdrawalsTable(withdrawals);
         updateDashboardWithdrawalStats(withdrawals);
         populateRecentActivity(withdrawals);
@@ -1702,7 +1857,7 @@
     function updateUsersTable(users) {
       const usersTable = document.getElementById('usersTable');
       usersTable.innerHTML = '';
-      
+
       users.forEach(user => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -1729,14 +1884,14 @@
       const pendingTable = document.getElementById('pendingWithdrawalsTable');
       const approvedTable = document.getElementById('approvedWithdrawalsTable');
       const rejectedTable = document.getElementById('rejectedWithdrawalsTable');
-      
+
       pendingTable.innerHTML = '';
       approvedTable.innerHTML = '';
       rejectedTable.innerHTML = '';
-      
+
       withdrawals.forEach(request => {
         const row = document.createElement('tr');
-        
+
         if (request.status === 'pending') {
           row.innerHTML = `
             <td>${request.id}</td>
@@ -1784,20 +1939,20 @@
       const totalReferrals = users.reduce((sum, user) => sum + (user.referrals ? user.referrals.length : 0), 0);
       const totalBonusGiven = totalReferrals * 10; // Assuming 10 points per referral
       const conversionRate = users.length > 0 ? Math.round((totalReferrals / users.length) * 100) : 0;
-      
+
       document.getElementById('totalReferrals').textContent = totalReferrals;
       document.getElementById('totalBonusGiven').textContent = totalBonusGiven;
       document.getElementById('conversionRate').textContent = `${conversionRate}%`;
-      
+
       // Populate top referrers
       const topReferrers = users
         .filter(user => user.referrals && user.referrals.length > 0)
         .sort((a, b) => (b.referrals.length - a.referrals.length))
         .slice(0, 10);
-      
+
       const topReferrersTable = document.getElementById('topReferrersTable');
       topReferrersTable.innerHTML = '';
-      
+
       topReferrers.forEach(user => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -1813,12 +1968,12 @@
     function populateRecentActivity(withdrawals) {
       const activityTable = document.getElementById('recentActivityTable');
       activityTable.innerHTML = '';
-      
+
       // Get recent withdrawals (last 10)
       const recentWithdrawals = withdrawals
         .sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate))
         .slice(0, 10);
-      
+
       recentWithdrawals.forEach(withdrawal => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -1835,12 +1990,12 @@
     function populateTopUsers(users) {
       const topUsersTable = document.getElementById('topUsersTable');
       topUsersTable.innerHTML = '';
-      
+
       // Sort users by points and get top 10
       const topUsers = users
         .sort((a, b) => (b.points || 0) - (a.points || 0))
         .slice(0, 10);
-      
+
       topUsers.forEach((user, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -1864,9 +2019,9 @@
     }
 
     // Save application settings
-    document.getElementById('appSettingsForm').addEventListener('submit', function(e) {
+    document.getElementById('appSettingsForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      
+
       const settings = {
         pointsPerAd: parseInt(document.getElementById('pointsPerAd').value),
         dailyAdLimit: parseInt(document.getElementById('dailyAdLimit').value),
@@ -1874,7 +2029,7 @@
         referrerBonus: parseInt(document.getElementById('referrerBonus').value),
         refereeBonus: parseInt(document.getElementById('refereeBonus').value)
       };
-      
+
       db.collection('settings').doc('appSettings').set(settings)
         .then(() => {
           showToast('Settings saved successfully!', 'success');
@@ -1891,32 +2046,32 @@
         status: 'approved',
         approvedDate: new Date().toISOString()
       })
-      .then(() => {
-        showToast('Withdrawal approved!', 'success');
-      })
-      .catch(error => {
-        console.error('Error approving withdrawal:', error);
-        showToast('Error approving withdrawal', 'error');
-      });
+        .then(() => {
+          showToast('Withdrawal approved!', 'success');
+        })
+        .catch(error => {
+          console.error('Error approving withdrawal:', error);
+          showToast('Error approving withdrawal', 'error');
+        });
     }
 
     // Reject withdrawal
     function rejectWithdrawal(requestId) {
       const reason = prompt('Enter rejection reason:');
       if (reason === null) return; // User cancelled
-      
+
       db.collection('withdrawals').doc(requestId).update({
         status: 'rejected',
         rejectionReason: reason,
         rejectedDate: new Date().toISOString()
       })
-      .then(() => {
-        showToast('Withdrawal rejected!', 'success');
-      })
-      .catch(error => {
-        console.error('Error rejecting withdrawal:', error);
-        showToast('Error rejecting withdrawal', 'error');
-      });
+        .then(() => {
+          showToast('Withdrawal rejected!', 'success');
+        })
+        .catch(error => {
+          console.error('Error rejecting withdrawal:', error);
+          showToast('Error rejecting withdrawal', 'error');
+        });
     }
 
     // View user details
@@ -1990,7 +2145,7 @@
           <span class="detail-value">${new Date(user.lastActive).toLocaleDateString()}</span>
         </div>
       `;
-      
+
       userModal.classList.add('show');
     }
 
@@ -2001,103 +2156,103 @@
           status: 'banned',
           bannedDate: new Date().toISOString()
         })
-        .then(() => {
-          showToast('User banned successfully!', 'success');
-        })
-        .catch(error => {
-          console.error('Error banning user:', error);
-          showToast('Error banning user', 'error');
-        });
+          .then(() => {
+            showToast('User banned successfully!', 'success');
+          })
+          .catch(error => {
+            console.error('Error banning user:', error);
+            showToast('Error banning user', 'error');
+          });
       }
     }
 
     // Export data
-    document.getElementById('exportDataBtn').addEventListener('click', function() {
+    document.getElementById('exportDataBtn').addEventListener('click', function () {
       Promise.all([
         db.collection('users').get(),
         db.collection('withdrawals').get(),
         db.collection('settings').doc('appSettings').get()
       ])
-      .then(([usersSnapshot, withdrawalsSnapshot, settingsDoc]) => {
-        const users = [];
-        usersSnapshot.forEach(doc => {
-          users.push({ id: doc.id, ...doc.data() });
+        .then(([usersSnapshot, withdrawalsSnapshot, settingsDoc]) => {
+          const users = [];
+          usersSnapshot.forEach(doc => {
+            users.push({ id: doc.id, ...doc.data() });
+          });
+
+          const withdrawals = [];
+          withdrawalsSnapshot.forEach(doc => {
+            withdrawals.push({ id: doc.id, ...doc.data() });
+          });
+
+          const settings = settingsDoc.exists ? settingsDoc.data() : {};
+
+          const data = {
+            users,
+            withdrawals,
+            settings,
+            exportDate: new Date().toISOString()
+          };
+
+          const dataStr = JSON.stringify(data, null, 2);
+          const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+          const exportFileDefaultName = 'adlancer-data.json';
+
+          const linkElement = document.createElement('a');
+          linkElement.setAttribute('href', dataUri);
+          linkElement.setAttribute('download', exportFileDefaultName);
+          linkElement.click();
+
+          showToast('Data exported successfully!', 'success');
+        })
+        .catch(error => {
+          console.error('Error exporting data:', error);
+          showToast('Error exporting data', 'error');
         });
-        
-        const withdrawals = [];
-        withdrawalsSnapshot.forEach(doc => {
-          withdrawals.push({ id: doc.id, ...doc.data() });
-        });
-        
-        const settings = settingsDoc.exists ? settingsDoc.data() : {};
-        
-        const data = {
-          users,
-          withdrawals,
-          settings,
-          exportDate: new Date().toISOString()
-        };
-        
-        const dataStr = JSON.stringify(data, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        
-        const exportFileDefaultName = 'adlancer-data.json';
-        
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
-        
-        showToast('Data exported successfully!', 'success');
-      })
-      .catch(error => {
-        console.error('Error exporting data:', error);
-        showToast('Error exporting data', 'error');
-      });
     });
 
     // Reset data
-    document.getElementById('resetDataBtn').addEventListener('click', function() {
+    document.getElementById('resetDataBtn').addEventListener('click', function () {
       if (confirm('WARNING: This will reset ALL data. Are you absolutely sure?')) {
         // This is a dangerous operation - in a real app, you'd want additional safeguards
         const batch = db.batch();
-        
+
         // Delete all users
         db.collection('users').get().then(snapshot => {
           snapshot.forEach(doc => {
             batch.delete(doc.ref);
           });
-          
+
           // Delete all withdrawals
           return db.collection('withdrawals').get();
         })
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            batch.delete(doc.ref);
+          .then(snapshot => {
+            snapshot.forEach(doc => {
+              batch.delete(doc.ref);
+            });
+
+            // Reset settings to defaults
+            const defaultSettings = {
+              pointsPerAd: 5,
+              dailyAdLimit: 5000,
+              minWithdrawalPoints: 400,
+              referrerBonus: 10,
+              refereeBonus: 5
+            };
+
+            const settingsRef = db.collection('settings').doc('appSettings');
+            batch.set(settingsRef, defaultSettings);
+
+            // Commit the batch
+            return batch.commit();
+          })
+          .then(() => {
+            showToast('All data has been reset!', 'success');
+          })
+          .catch(error => {
+            console.error('Error resetting data:', error);
+            showToast('Error resetting data', 'error');
           });
-          
-          // Reset settings to defaults
-          const defaultSettings = {
-            pointsPerAd: 5,
-            dailyAdLimit: 5000,
-            minWithdrawalPoints: 400,
-            referrerBonus: 10,
-            refereeBonus: 5
-          };
-          
-          const settingsRef = db.collection('settings').doc('appSettings');
-          batch.set(settingsRef, defaultSettings);
-          
-          // Commit the batch
-          return batch.commit();
-        })
-        .then(() => {
-          showToast('All data has been reset!', 'success');
-        })
-        .catch(error => {
-          console.error('Error resetting data:', error);
-          showToast('Error resetting data', 'error');
-        });
       }
     });
 
@@ -2113,4 +2268,5 @@
     document.addEventListener('DOMContentLoaded', initAdminPanel);
   </script>
 </body>
+
 </html>
